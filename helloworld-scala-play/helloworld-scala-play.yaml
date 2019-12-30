@@ -1,0 +1,12 @@
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: helloworld-scala-play
+  namespace: default
+spec:
+  template:
+    spec:
+      containers:
+      - image: "dev.local/helloworld-scala-play:0.0.1"
+        ports:
+        - containerPort: 9000 # use default play port
