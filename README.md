@@ -1,4 +1,4 @@
-# Play for Knative
+# Play with Knative
 
 This project demos how to deploy a embedded Play app in Knative.
 
