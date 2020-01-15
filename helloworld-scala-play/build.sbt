@@ -1,25 +1,62 @@
-enablePlugins(JavaAppPackaging, DockerPlugin)
 
 organization := "Scala & Play Examples for Knative Serving"
-
 name := "helloworld-scala-play"
-
 version := "0.0.1"
 
-scalaVersion := "2.13.1"
+scalaVersion := "2.12.10"
 
 mainClass in Compile := Some("com.example.helloworld.HelloWorldPlayScala")
 
 scalacOptions ++= Seq("-encoding", "UTF-8")
 
-// Make sure that the application.conf and possibly other resources are included
-import NativePackagerHelper._
+val graalAkkaVersion = "0.5.0"
+val GraalVersion = "19.2.1"
 
 libraryDependencies ++= Seq(
   akkaHttpServer,
-  logback,
-  filters
-)
+  // logback,
+  filters,
+
+  // GraalVM craziness
+  // Only needed for compilation
+  "org.graalvm.sdk" % "graal-sdk" % GraalVersion % "provided", 
+  "com.oracle.substratevm" % "svm" % GraalVersion % "provided",
+  "com.github.vmencik" %% "graal-akka-actor" % graalAkkaVersion,
+  "com.github.vmencik" %% "graal-akka-stream" % graalAkkaVersion,
+  "com.github.vmencik" %% "graal-akka-http" % graalAkkaVersion,
+  "com.github.vmencik" %% "graal-akka-slf4j" % graalAkkaVersion
+  )
+  
+enablePlugins(GraalVMNativeImagePlugin)
+
+graalVMNativeImageOptions ++= Seq(
+  "--verbose",
+  "-H:+ReportExceptionStackTraces",
+  "--no-fallback",
+  "-H:+AllowIncompleteClasspath",
+  "-H:+TraceClassInitialization",
+  "--report-unsupported-elements-at-runtime",
+  "--initialize-at-build-time="+ Seq(
+    "org.slf4j",
+    "ch.qos.logback",
+    "scala",
+    "akka.dispatch.affinity",
+    "akka.util",
+    ).mkString(","),
+
+    "--initialize-at-run-time=" + Seq(
+      "play.core.server.AkkaHttpServer$$anon$2",
+      "com.typesafe.sslconfig.ssl.tracing.TracingSSLContext",
+    // We want to delay initialization of these to load the config at runtime
+    "com.typesafe.config.impl.ConfigImpl$EnvVariablesHolder",
+    "com.typesafe.config.impl.ConfigImpl$SystemPropertiesHolder",
+  ).mkString(",")
+  )
+  
+
+enablePlugins(JavaAppPackaging, DockerPlugin)
+// Make sure that the application.conf and possibly other resources are included
+import NativePackagerHelper._
 
 mappings in Universal ++= directory( baseDirectory.value / "src" / "main" / "resources" )
 

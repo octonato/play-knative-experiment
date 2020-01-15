@@ -5,24 +5,34 @@ import play.api.routing.sird._
 import play.core.server.AkkaHttpServer
 import Results._
 import play.api.routing.Router
-import play.api.Logger
+// import play.api.Logger
 
 object HelloWorldPlayScala extends PlayApp {
 
-  private val logger = Logger(getClass())
+  // private val logger = Logger(getClass())
 
   val routes = {
     case GET(p"/hello/$to") => 
       Action {
-        logger.info(s"serving /hello/$to")
+        println(s"serving /hello/$to")
         Ok(s"Hello $to!")
       }
 
     case GET(p"/") => 
       Action {
-        logger.info(s"serving /")
+        println(s"serving /")
         Ok("")
       }
+
+    case GET(p"/throw-it") => 
+      throw new RuntimeException("throw-it")
+      
+
+    case GET(p"/bad-boy") => 
+      Action {
+        BadRequest("Bad one")
+      }
   }
+
 
 }

@@ -1,0 +1,13 @@
+{
+  "resources":[
+    {"pattern":"META-INF/MANIFEST.MF"}, 
+    {"pattern":"akka-http-version.conf"}, 
+    {"pattern":"application.conf"}, 
+    {"pattern":"library.properties"}, 
+    {"pattern":"messages"}, 
+    {"pattern":"messages.default"}, 
+    {"pattern":"play/reference-overrides.conf"}, 
+    {"pattern":"reference.conf"}, 
+    {"pattern":"version.conf"}
+  ]
+}
