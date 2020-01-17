@@ -23,15 +23,6 @@ object HelloWorldPlayScala extends PlayApp {
         println(s"serving /")
         Ok("")
       }
-
-    case GET(p"/throw-it") => 
-      throw new RuntimeException("throw-it")
-      
-
-    case GET(p"/bad-boy") => 
-      Action {
-        BadRequest("Bad one")
-      }
   }
 
 

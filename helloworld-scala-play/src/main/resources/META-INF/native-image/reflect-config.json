@@ -226,6 +226,10 @@
   "methods":[{"name":"<init>","parameterTypes":["com.typesafe.sslconfig.util.LoggerFactory"] }]
 },
 {
+  "name":"com.typesafe.sslconfig.ssl.NoopHostnameVerifier",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"java.io.Serializable"
 },
 {
